@@ -56,7 +56,7 @@ public class CategoriesController
     // add annotation to call this method for a POST action
     @PostMapping
     // add annotation to ensure that only an ADMIN can call this function
-    @PreAuthorize("hasRole('Admin')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Category> addCategory(@RequestBody Category category)
     {
         // insert the category and return it with status 201 Created
@@ -65,19 +65,24 @@ public class CategoriesController
     }
 
     // add annotation to call this method for a PUT (update) action - the url path must include the categoryId
+    @PutMapping("/{id}")
     // add annotation to ensure that only an ADMIN can call this function
+    @PreAuthorize("hasRole('ADMIN')")
     public Category updateCategory(@PathVariable int id, @RequestBody Category category)
     {
         // update the category by id and return the updated category (200 OK)
-        return null;
+        return categoryService.update(id, category);
     }
 
 
     // add annotation to call this method for a DELETE action - the url path must include the categoryId
+    @DeleteMapping("/{id}")
     // add annotation to ensure that only an ADMIN can call this function
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteCategory(@PathVariable int id)
     {
         // delete the category by id and return status 204 No Content
-        return null;
+        categoryService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
