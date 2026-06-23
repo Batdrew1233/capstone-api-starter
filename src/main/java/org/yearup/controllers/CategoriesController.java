@@ -80,10 +80,11 @@ public class CategoriesController
     public Category updateCategory(@PathVariable int id, @RequestBody Category category)
     {
         // update the category by id and return the updated category (200 OK)
-        if (categoryService.getById(id) == null){
+        Category updatedCategory = categoryService.update(id, category);
+        if (updatedCategory == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found");
         }
-        return categoryService.update(id,category);
+        return updatedCategory;
     }
 
 

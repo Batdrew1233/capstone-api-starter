@@ -37,7 +37,13 @@ public class CategoryService
     public Category update(int categoryId, Category category)
     {
         // update category and return the updated category
-        return categoryRepository.save(category);
+        Category existing = categoryRepository.findById(categoryId).orElse(null);
+        if (existing == null){
+            return null;
+        }
+        existing.setName(category.getName());
+        existing.setDescription(category.getDescription());
+        return categoryRepository.save(existing);
     }
 
     public void delete(int categoryId)
