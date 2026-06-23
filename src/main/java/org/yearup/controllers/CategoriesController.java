@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.yearup.models.Category;
 import org.yearup.models.Product;
 import org.yearup.service.CategoryService;
@@ -31,6 +32,8 @@ public class CategoriesController
     }
 
     // add the appropriate annotation for a get action
+    @GetMapping
+    @PreAuthorize("permitAll()")
     public List<Category> getAll()
     {
         // find and return all categories
@@ -38,10 +41,16 @@ public class CategoriesController
     }
 
     // add the appropriate annotation for a get action
+    @GetMapping("/{id}")
+    @PreAuthorize("permitAll()")
     public Category getById(@PathVariable int id)
     {
         // get the category by id
-        return categoryService.getById(id);
+        Category category = categoryService.getById(id);
+        if (category == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found");
+        }
+        return category;
     }
 
     // the url to return all products in category 1 would look like this
@@ -71,7 +80,10 @@ public class CategoriesController
     public Category updateCategory(@PathVariable int id, @RequestBody Category category)
     {
         // update the category by id and return the updated category (200 OK)
-        return categoryService.update(id, category);
+        if (categoryService.getById(id) == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found");
+        }
+        return categoryService.update(id,category);
     }
 
 
@@ -82,6 +94,9 @@ public class CategoriesController
     public ResponseEntity<Void> deleteCategory(@PathVariable int id)
     {
         // delete the category by id and return status 204 No Content
+        if (categoryService.getById(id) == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found");
+        }
         categoryService.delete(id);
         return ResponseEntity.noContent().build();
     }
