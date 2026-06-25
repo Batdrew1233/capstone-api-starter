@@ -16,7 +16,7 @@ import java.security.Principal;
 @RestController
 @RequestMapping("/cart")
 @CrossOrigin
-@PreAuthorize("isAuthenticated")
+@PreAuthorize("isAuthenticated()")
 // only logged in users should have access to these actions
 public class ShoppingCartController
 {
@@ -25,6 +25,10 @@ public class ShoppingCartController
     private UserService userService;
 
 
+    public ShoppingCartController(ShoppingCartService shoppingCartService, UserService userService) {
+        this.shoppingCartService = shoppingCartService;
+        this.userService = userService;
+    }
 
     // each method in this controller requires a Principal object as a parameter
     @GetMapping
@@ -43,7 +47,7 @@ public class ShoppingCartController
     // add a POST method to add a product to the cart - the url should be
     // https://localhost:8080/cart/products/15  (15 is the productId to be added)
     // return the updated cart with status 201 Created
-    @PostMapping("/products/{prodcutId}")
+    @PostMapping("/products/{productId}")
     public ResponseEntity<ShoppingCart> addProductToCart(@PathVariable int productId, Principal principal)
     {
         String userName = principal.getName();
@@ -59,6 +63,7 @@ public class ShoppingCartController
     // add a PUT method to update an existing product in the cart - the url should be
     // https://localhost:8080/cart/products/15  (15 is the productId to be updated)
     // the BODY should be a ShoppingCartItem - quantity is the only value that will be updated; return the cart (200 OK)
+    @PutMapping
     public ShoppingCart updateProductQuantity(@PathVariable int productId, @RequestBody ShoppingCartItem item, Principal principal){
         String userName = principal.getName();
 
