@@ -10,8 +10,10 @@ import org.yearup.repository.ProductRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -49,6 +51,16 @@ public class ProductServiceTest {
     public void update_shouldUpdateStock_whenStockChanged(){
         //Arrange
         Product ogProduct = new Product(1, "product1", 100.00, 1, "ermm", "Errmm", 25, true, null);
-        Product newProduct = new Product(1, "product1", 100.00, 1, "ermm", "Errmm", 25, true, null);
+        Product newProduct = new Product(1, "product1", 100.00, 1, "ermm", "Errmm", 50, true, null);
+
+        when(productRepository.findById(1)).thenReturn(Optional.of(ogProduct));
+        when(productRepository.save(ogProduct)).thenReturn(ogProduct);
+
+        //Act
+        Product updateProduct = productService.update(1, newProduct);
+
+        //assert
+        assertEquals(50, updateProduct.getStock());
+        verify(productRepository).save(ogProduct);
     }
 }
