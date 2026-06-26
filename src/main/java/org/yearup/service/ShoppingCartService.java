@@ -13,9 +13,9 @@ import java.util.List;
 @Service
 public class ShoppingCartService
 {
-    // a shopping cart is built from cart rows plus a product lookup for each row
     private final ShoppingCartRepository shoppingCartRepository;
     private final ProductService productService;
+
 
     public ShoppingCartService(ShoppingCartRepository shoppingCartRepository, ProductService productService)
     {
@@ -23,9 +23,12 @@ public class ShoppingCartService
         this.productService = productService;
     }
 
+    /*
+    Builds and returns the user's shopping cart.
+     */
     public ShoppingCart getByUserId(int userId)
     {
-        // load the user's cart rows, look up each product, and build the ShoppingCart
+
         ShoppingCart cart = new ShoppingCart();
 
         List<CartItem> cartItems = shoppingCartRepository.findByUserId(userId);
@@ -43,7 +46,10 @@ public class ShoppingCartService
         return cart;
     }
 
-    // add additional methods here
+    /*
+    Adds A product to the user's cart
+    If the product is already in the cart, the quantity increases by one.
+     */
     public ShoppingCart addProduct(int userId, int productId){
         CartItem cartItem = shoppingCartRepository.findByUserIdAndProductId(userId, productId);
 
@@ -61,6 +67,9 @@ public class ShoppingCartService
         return getByUserId(userId);
     }
 
+    /*
+    Updates the quantity of a product already in the user's cart.
+     */
     public ShoppingCart updateProduct(int userId, int productId, int quantity){
         CartItem cartItem = shoppingCartRepository.findByUserIdAndProductId(userId, productId);
 
@@ -72,6 +81,11 @@ public class ShoppingCartService
         return getByUserId(userId);
     }
 
+    /*
+    Clears all items from the user's cart and returns the empty cart.
+    Transactional makes sure the changes are saved but if
+    an error occurs, spring rolls back transaction.
+     */
     @Transactional
     public ShoppingCart clearCart(int userId){
         shoppingCartRepository.deleteByUserId(userId);

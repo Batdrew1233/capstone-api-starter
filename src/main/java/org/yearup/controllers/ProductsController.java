@@ -17,11 +17,17 @@ public class ProductsController
 {
     private final ProductService productService;
 
+    /*
+    Injects the ProductService to handle product-related request
+     */
     public ProductsController(ProductService productService)
     {
         this.productService = productService;
     }
 
+    /*
+    Searches for products using optional category, price, and subcategory filters.
+     */
     @GetMapping("")
     @PreAuthorize("permitAll()")
     public List<Product> search(@RequestParam(name="cat", required = false) Integer categoryId,
@@ -32,6 +38,10 @@ public class ProductsController
         return productService.search(categoryId, minPrice, maxPrice, subCategory);
     }
 
+    /*
+    Retrieves a product by its ID
+    Returns a 404 response if the product does not exist.
+     */
     @GetMapping("{id}")
     @PreAuthorize("permitAll()")
     public Product getById(@PathVariable int id)
@@ -44,6 +54,10 @@ public class ProductsController
         return product;
     }
 
+    /*
+    Creates a new product
+    Only administrators can access this endpoint.
+     */
     @PostMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Product> addProduct(@RequestBody Product product)
@@ -52,6 +66,10 @@ public class ProductsController
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
+    /*
+    Updates an existing product
+    Returns a 404 response if the product cannot be found.
+     */
     @PutMapping("{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Product updateProduct(@PathVariable int id, @RequestBody Product product)
@@ -62,6 +80,10 @@ public class ProductsController
         return productService.update(id, product);
     }
 
+    /*
+    Deletes a product by its ID
+    Only administrators can perform this action.
+     */
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteProduct(@PathVariable int id)

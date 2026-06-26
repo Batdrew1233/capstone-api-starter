@@ -16,6 +16,11 @@ public class ProductService
         this.productRepository = productRepository;
     }
 
+    /*
+    Filters products by category, minimum price, maximum price and subcategory.
+    Returns all matching products.
+    Fixed a bug that previously excluded non-featured products from the results.
+     */
     public List<Product> search(Integer categoryId, Double minPrice, Double maxPrice, String subCategory)
     {
         List<Product> products = categoryId != null
@@ -45,6 +50,11 @@ public class ProductService
         return productRepository.save(product);
     }
 
+    /*
+    Updates an existing product with the new information.
+    Includes stock quantity, and saves the changes to the database.
+    Fixed a bug that prevented stock quantity from being updated.
+     */
     public Product update(int productId, Product product)
     {
         Product existing = productRepository.findById(productId).orElseThrow();

@@ -22,18 +22,29 @@ public class CategoryService
         return categoryRepository.findAll();
     }
 
+    /*
+    Gets a category by its ID
+    Returns null if the category does not exist.
+     */
     public Category getById(int categoryId)
     {
         // get category by id
         return categoryRepository.findById(categoryId).orElse(null);
     }
 
+    /*
+    Creates and saves a new category to the databases.
+     */
     public Category create(Category category)
     {
         // create a new category
         return categoryRepository.save(category);
     }
 
+    /*
+    Updates an existing category's name and description
+    Returns the updated category, or null if the category doesn't exist.
+     */
     public Category update(int categoryId, Category category)
     {
         // update category and return the updated category

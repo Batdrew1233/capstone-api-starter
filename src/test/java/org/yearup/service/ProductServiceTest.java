@@ -16,12 +16,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+// Uses Mockito to initialize mock and Inject Mocks automatically
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceTest {
 
+    //Fake version of dependency
     @Mock
     private ProductRepository productRepository;
 
+    //Makes a real service and injects mocked dependency
     @InjectMocks
     private ProductService productService;
 

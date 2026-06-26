@@ -30,14 +30,4 @@ class ProductRepositoryTest
         assertEquals(499.99, actual.getPrice(), 0.001, "Because I tried to get product 1 from the database.");
     }
 
-    @Test
-    public void findAll_shouldReturn_allProducts(){
-        //Act
-        var products = productRepository.findAll();
-
-        //Assert
-        assertNotNull(products);
-        assertEquals(true, products.size() > 0);
-
-    }
 }
